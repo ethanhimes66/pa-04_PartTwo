@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------
 pa-04_PartTwo:  Intro to Enhanced Needham-Schroeder Key-Exchange with TWO-way Authentication
 
-FILE:   amal.c     SKELETON
+FILE:   amal.c
 
 Written By: 
      1- James Handlon
@@ -148,7 +148,7 @@ int main ( int argc , char * argv[] )
 
     
     
-    
+    nvalid agrument. Must be either 1 or 2
     
     //*************************************
     // Receive   &   Process Message 2

@@ -56,8 +56,8 @@ int main ( int argc , char * argv[] )
         exit(-1) ;
     }
 
-    fd_A2B    = atoi ( argv[0] ) ;  // Read from Amal   File Descriptor
-    fd_B2A    = atoi ( argv[1] ) ;  // Send to   Amal   File Descriptor
+    fd_A2B    = atoi ( argv[1] ) ;  // Read from Amal   File Descriptor
+    fd_B2A    = atoi ( argv[2] ) ;  // Send to   Amal   File Descriptor
 
     log = fopen("basim/logBasim.txt" , "w" );
     if( ! log )
@@ -86,12 +86,15 @@ int main ( int argc , char * argv[] )
         fprintf( stderr , "\nCould not get Basim's Masker key & IV.\n");
         exit(-1);
     } else {
-        fprintf( log , "Basim has this Master Ka { key , IV }\n");
+        fprintf( log , "Basim has this Master Kb { key , IV }\n");
         BIO_dump_indent_fp( log , Kb.key, sizeof(Kb.key), 4);
     }
     fprintf( log , "\n" );
 	// BIO_dump_fp the IV indented 4 spaces to the righ
     BIO_dump_indent_fp( log , Kb.iv, INITVECTOR_LEN, 4);
+    fprintf( log , "\n" );
+
+    
     // Get Basim's pre-created Nonces: Nb
 	Nonce_t   Nb;  
 
