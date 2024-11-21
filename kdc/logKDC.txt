@@ -1,0 +1,64 @@
+***************************************************
+Starting the KDC
+***************************************************
+
+<readFrom Amal> FD=3 , <sendTo Amal> FD=6
+
+Amal has this Master Ka { key , IV }
+    0000 - 01 27 48 03 a4 b0 eb 2f-1c bb 05 18 09 6d 45 d9   .'H..../.....mE.
+    0010 - aa 5b 77 69 b8 12 0b 5b-6b d5 cd 59 f2 4c 7c f7   .[wi...[k..Y.L|.
+
+    0000 - 4c 6d 4f a6 a5 91 37 ed-7e fe 34 54 24 4b a0 ed   LmO...7.~.4T$K..
+
+Basim has this Master Kb { key , IV }
+    0000 - 72 17 92 80 3c 7d 1d c5-6a 13 78 1d e0 55 10 21   r...<}..j.x..U.!
+    0010 - 63 48 e5 22 27 b7 22 72-ce d9 07 7e 7c 8a 66 6c   cH."'."r...~|.fl
+
+    0000 - c4 2e 33 75 bd 4b a8 f1-0f 9a d1 9d c6 14 18 ef   ..3u.K..........
+
+***************************************************
+         MSG1 Receive
+***************************************************
+MSG1 ( 49 bytes ) has been received on FD 3 by MSG1_receive():
+
+KDC received message 1 from Amal with:
+    IDa = 'Amal is Hope'
+    IDb = 'Basim is Smiley'
+    Na ( 4 Bytes ) is:
+    0000 - 44 33 22 11                                       D3".
+
+***************************************************
+         MSG2 New
+***************************************************
+KDC: created this Session key KS { key , IV } is:
+    0000 - e9 c4 5c 56 03 c9 ad 47-78 b9 97 5c 4a e6 f2 7f   ..\V...Gx..\J...
+    0010 - 7d ef 6b 03 55 05 b2 0e-9d 35 90 88 67 e7 85 dd   }.k.U....5..g...
+
+    0000 - 8d ba 5c 47 10 37 c7 50-2f c3 38 eb 57 1c 64 31   ..\G.7.P/.8.W.d1
+
+The following Encrypted MSG2 ( 96 bytes ) has been created by MSG2_new():  
+    0000 - 10 fe ea d7 b9 41 e7 86-bc 1b 71 90 34 9a 9c 3b   .....A....q.4..;
+    0010 - 52 c7 d8 9f 88 e8 8c 3f-f3 0b 8f ce a9 0f 73 9f   R......?......s.
+    0020 - ec da 0e 4f 97 22 f9 c2-41 08 9e 13 b7 2b 84 45   ...O."..A....+.E
+    0030 - 5a 92 11 84 77 38 e8 05-49 ab c8 d2 c4 ed 92 25   Z...w8..I......%
+    0040 - ba 3c 74 81 16 10 0a 76-96 d0 1f 6f 2d 86 52 67   .<t....v...o-.Rg
+    0050 - 49 36 70 a2 b4 5a 77 39-f6 6c 1d ee e2 96 d2 23   I6p..Zw9.l.....#
+
+This is the content of MSG2 ( 80 Bytes ) before Encryption:
+    Ks { key + IV } (48 Bytes) is:
+    0000 - e9 c4 5c 56 03 c9 ad 47-10 00 00 00 00 00 00 00   ..\V...G........
+    0010 - 42 61 73 69 6d 20 69 73-20 53 6d 69 6c 65 79 00   Basim is Smiley.
+    0020 - 44 33 22 11 01 27 48 03-20 00 00 00 00 00 00 00   D3"..'H. .......
+    0030 - 8b cd c9 f1 d4 d6 2a aa-1c 47 db 7f 3f 8d 63 ba   ......*..G..?.c.
+    0040 - 5e 7e 9c 39 2a 81 cd b0-8a 32 85 9e 85 32 fa 7c   ^~.9*....2...2.|
+
+    IDb (16 Bytes) is:
+    0000 - 42 61 73 69 6d 20 69 73-20 53 6d 69 6c 65 79 00   Basim is Smiley.
+
+    Na (4 Bytes) is:
+    0000 - 44 33 22 11 01 27 48 03-                          D3"..'H.
+
+    Encrypted Ticket (32 Bytes) is
+    0000 - 8b cd c9 f1 d4 d6 2a aa-1c 47 db 7f 3f 8d 63 ba   ......*..G..?.c.
+    0010 - 5e 7e 9c 39 2a 81 cd b0-8a 32 85 9e 85 32 fa 7c   ^~.9*....2...2.|
+

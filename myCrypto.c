@@ -124,6 +124,120 @@ EVP_PKEY *getRSAfromFile(char * filename, int public)
     return key;
 }
 
+//-----------------------------------------------------------------------------
+// PA-01
+
+static unsigned char   plaintext [ PLAINTEXT_LEN_MAX ] , // Temporarily store plaintext
+                       ciphertext[ CIPHER_LEN_MAX    ] , // Temporarily store outcome of encryption
+                       decryptext[ DECRYPTED_LEN_MAX ] ; // Temporarily store decrypted text
+
+// above arrays being static to resolve runtime stack size issue. 
+// However, that makes the code non-reentrant for multithreaded application
+
+//-----------------------------------------------------------------------------
+
+int encryptFile( int fd_in, int fd_out, const uint8_t *key, const uint8_t *iv )
+{
+    int status;
+    int len;
+    int ciphertext_len;
+    uint8_t plaintext[PLAINTEXT_LEN_MAX];
+    uint8_t ciphertext[CIPHER_LEN_MAX];
+
+    EVP_CIPHER_CTX  *ctx = EVP_CIPHER_CTX_new();
+    if( !ctx )
+    {
+        handleErrors("encrypt: failed to creat CTX");
+    }
+
+    status = EVP_EncryptInit_ex( ctx, ALGORITHM(), NULL, key, iv);
+    if( status != 1 )
+    {
+        handleErrors("encrypt: failed to EncryptInit_ex");
+    }
+
+    ciphertext_len = 0;
+    while ((len = read(fd_in, plaintext, PLAINTEXT_LEN_MAX)) > 0)
+    {
+        status = EVP_EncryptUpdate(ctx, ciphertext, &ciphertext_len, plaintext, len);
+        if( status != 1 )
+        {
+            handleErrors("encrypt: failed to EncryptUpdate");
+        }
+        if (write(fd_out, ciphertext, ciphertext_len) != ciphertext_len)
+        {
+            handleErrors("encrypt: failed to write after EncryptUpdate");
+        }
+    }
+
+    len = 0;
+    status = EVP_EncryptFinal_ex( ctx, ciphertext, &len );
+    if( status != 1 )
+    {
+        handleErrors("encrypt: failed to EncryptFinal_ex");
+    }
+    if (write(fd_out, ciphertext, len) != len)
+    {
+        handleErrors("encrypt: failed to write after EncryptFinal_ex");
+    }
+
+    EVP_CIPHER_CTX_free(ctx);
+
+    return ciphertext_len;
+}
+
+//-----------------------------------------------------------------------------
+
+
+int decryptFile( int fd_in, int fd_out, const uint8_t *key, const uint8_t *iv )
+{
+    int status;
+    int len; 
+    int plaintext_len;
+    uint8_t ciphertext[CIPHER_LEN_MAX];
+    uint8_t plaintext[PLAINTEXT_LEN_MAX];
+
+    EVP_CIPHER_CTX  *ctx = EVP_CIPHER_CTX_new();
+    if( !ctx )
+    {
+        handleErrors("decrypt: failed to creat CTX");
+    }
+
+    status = EVP_DecryptInit_ex( ctx, ALGORITHM(), NULL, key, iv);
+    if( status != 1 )
+    {
+        handleErrors("decrypt: failed to DecryptInit_ex");
+    }
+
+    plaintext_len = 0;
+    while ((len = read(fd_in, ciphertext, CIPHER_LEN_MAX)) > 0)
+    {
+        status = EVP_DecryptUpdate(ctx, plaintext, &plaintext_len, ciphertext, len);
+        if( status != 1 )
+        {
+            handleErrors("decrypt: failed to DecryptUpdate");
+        }
+        if (write(fd_out, plaintext, plaintext_len) != plaintext_len)
+        {
+            handleErrors("encrypt: failed to write after DecryptUpdate");
+        }
+    }
+
+    len = 0;
+    status = EVP_DecryptFinal_ex( ctx, plaintext, &len );
+    if( status != 1 )
+    {
+        handleErrors("decryptFile: failed to DecryptFinal_ex");
+    }
+    if (write(fd_out, plaintext, len) != len)
+    {
+        handleErrors("encrypt: failed to write after DecryptFinal_ex");
+    }
+
+    EVP_CIPHER_CTX_free(ctx);
+
+    return plaintext_len;
+}
 
 //***********************************************************************
 // PA-02
@@ -344,7 +458,7 @@ int getKeyFromFile( char *keyF , myKey_t *x )
 // Msg1 is not encrypted
 // Returns the size (in bytes) of Message #1 
 
-unsigned MSG1_new ( FILE *log , uint8_t **msg1 , const char *IDa , const char *IDb , const Nonce_t Na )
+size_t MSG1_new ( FILE *log , uint8_t **msg1 , const char *IDa , const char *IDb , const Nonce_t Na )
 {
 
     //  Check agains any NULL pointers in the arguments
@@ -529,17 +643,26 @@ size_t MSG2_new( FILE *log , uint8_t **msg2, const myKey_t *Ka , const myKey_t *
 {
 
     size_t LenMsg2  ;
+    size_t LenIDa = strlen(IDa) + 1;
+    size_t LenIDb = strlen(IDb) + 1;
     
     //---------------------------------------------------------------------------------------
     // Construct TktPlain = { Ks  || L(IDa)  || IDa }
     // in the global scratch buffer plaintext[]
+    size_t TktPlainLen = sizeof(Ks) + sizeof(LenIDa) + LenIDa;
+    uint8_t *p = &plaintext[0];
 
+    memcpy(p, Ks, sizeof(Ks));
+    p += sizeof(Ks);
 
-    // Use that global array as a scratch buffer for building the plaintext of the ticket
-    // Compute its encrypted version in the global scratch buffer ciphertext[]
+    memcpy(p, &LenIDa, sizeof(LenIDa));
+    p += sizeof(LenIDa);
+
+    memcpy(p, IDa, LenIDa);
 
     // Now, set TktCipher = encrypt( Kb , plaintext );
     // Store the result in the global scratch buffer ciphertext[]
+    size_t TktCipherLen = encrypt( plaintext , TktPlainLen, Kb->key, Kb->iv, ciphertext);
 
     //---------------------------------------------------------------------------------------
     // Construct the rest of Message 2 then encrypt it using Ka
@@ -547,30 +670,58 @@ size_t MSG2_new( FILE *log , uint8_t **msg2, const myKey_t *Ka , const myKey_t *
 
     // Fill in Msg2 Plaintext:  Ks || L(IDb) || IDb  || L(Na) || Na || lenTktCipher) || TktCipher
     // Reuse that global array plaintext[] as a scratch buffer for building the plaintext of the MSG2
+    p = &plaintext[0];
+    size_t plaintextlen = 0;
+
+    memcpy(p, Ks, sizeof(Ks));
+    p += sizeof(Ks);
+    plaintextlen += sizeof(Ks);
+
+    memcpy(p, &LenIDb, sizeof(LenIDb));
+    p += sizeof(LenIDb);
+    plaintextlen += sizeof(LenIDb);
+
+    memcpy(p, IDb, LenIDb);
+    p += LenIDb;
+    plaintextlen += LenIDb;
+
+    memcpy(p, Na, sizeof(Na));
+    p += sizeof(Na);
+    plaintextlen += sizeof(Na);
+
+    memcpy(p, &TktCipherLen, sizeof(TktCipherLen));
+    p += sizeof(TktCipherLen);
+    plaintextlen += sizeof(TktCipherLen);
+
+    memcpy(p, ciphertext, TktCipherLen);
+    plaintextlen += TktCipherLen;
 
     // Now, encrypt Message 2 using Ka. 
     // Use the global scratch buffer ciphertext2[] to collect the results
+    size_t Msg2Len = encrypt( plaintext , plaintextlen, Ka->key, Ka->iv, ciphertext2);
 
     // allocate memory on behalf of the caller for a copy of MSG2 ciphertext
+    *msg2 = (uint8_t*) malloc(Msg2Len);
 
     // Copy the encrypted ciphertext to Caller's msg2 buffer.
+    memcpy(*msg2, ciphertext2, Msg2Len);
 
     fprintf( log , "The following Encrypted MSG2 ( %lu bytes ) has been"
-                   " created by MSG2_new():  \n" ,  ...  ) ;
-    BIO_dump_indent_fp( log , ... ,  ...  , 4 ) ;    fprintf( log , "\n" ) ;    
+                   " created by MSG2_new():  \n" ,  Msg2Len  ) ;
+    BIO_dump_indent_fp( log , *msg2 , Msg2Len , 4 ) ;    fprintf( log , "\n" ) ;    
 
-    fprintf( log ,"This is the content of MSG2 ( %lu Bytes ) before Encryption:\n" ,  ... );  
+    fprintf( log ,"This is the content of MSG2 ( %lu Bytes ) before Encryption:\n" ,  plaintextlen );  
     fprintf( log ,"    Ks { key + IV } (%lu Bytes) is:\n" , KEYSIZE );
-    BIO_dump_indent_fp ( log ,  ...  ,  ...  , 4 ) ;  fprintf( log , "\n") ; 
+    BIO_dump_indent_fp ( log , plaintext , plaintextlen , 4 ) ;  fprintf( log , "\n") ; 
 
-    fprintf( log ,"    IDb (%lu Bytes) is:\n" , LenB);
-    BIO_dump_indent_fp ( log ,  ...  ,  ...  , 4 ) ;  fprintf( log , "\n") ; 
+    fprintf( log ,"    IDb (%lu Bytes) is:\n" , LenIDb);
+    BIO_dump_indent_fp ( log , IDb , LenIDb , 4 ) ;  fprintf( log , "\n") ; 
 
     fprintf( log ,"    Na (%lu Bytes) is:\n" , NONCELEN);
-    BIO_dump_indent_fp ( log ,  ...  ,  ...  , 4 ) ;  fprintf( log , "\n") ; 
+    BIO_dump_indent_fp ( log , Na , sizeof(Na) , 4 ) ;  fprintf( log , "\n") ; 
 
-    fprintf( log ,"    Encrypted Ticket (%lu Bytes) is\n" ,  ... );
-    BIO_dump_indent_fp ( log ,  ...  ,  ...  , 4 ) ;  fprintf( log , "\n") ; 
+    fprintf( log ,"    Encrypted Ticket (%lu Bytes) is\n" ,  TktCipherLen );
+    BIO_dump_indent_fp ( log , ciphertext , TktCipherLen , 4 ) ;  fprintf( log , "\n") ; 
 
     fflush( log ) ;    
     

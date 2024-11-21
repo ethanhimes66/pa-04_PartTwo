@@ -1,0 +1,19 @@
+***************************************************
+Starting Basim
+***************************************************
+
+<readFr. Amal> FD=7 , <sendTo Amal> FD=10
+
+Basim has this Master Kb { key , IV }
+    0000 - 72 17 92 80 3c 7d 1d c5-6a 13 78 1d e0 55 10 21   r...<}..j.x..U.!
+    0010 - 63 48 e5 22 27 b7 22 72-ce d9 07 7e 7c 8a 66 6c   cH."'."r...~|.fl
+
+    0000 - c4 2e 33 75 bd 4b a8 f1-0f 9a d1 9d c6 14 18 ef   ..3u.K..........
+
+Basim will use this Nonce:  Nb
+    0000 - 99 88 77 66                                       ..wf
+
+***************************************************
+         MSG3 Receive
+***************************************************
+Unable to receive all 8 bytes of lenTktCipher from FD 7 in MSG3_receive() ... EXITING

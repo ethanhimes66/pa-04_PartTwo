@@ -60,7 +60,7 @@ int main ( int argc , char * argv[] )
 	// and exit(-1)
 	// On success, print "Amal has this Master Ka { key , IV }\n" to the Log file
 	// BIO_dump_fp the Key IV indented 4 spaces to the righ
-    if (getKeyFromFile("kdc/amalKey.bin", &Ka) == -1)
+    if (getKeyFromFile("amal/amalKey.bin", &Ka) == -1)
     {
         fprintf( log , "\nCould not get Amal's Masker key & IV.\n");
         fprintf( stderr , "\nCould not get Amal's Masker key & IV.\n");
@@ -84,7 +84,7 @@ int main ( int argc , char * argv[] )
 	// and exit(-1) 
 	// On success, print "Basim has this Master Ka { key , IV }\n" to the Log file
 	// BIO_dump_fp the Key IV indented 4 spaces to the righ
-    if (getKeyFromFile("kdc/basimKey.bin", &Kb) == -1)
+    if (getKeyFromFile("basim/basimKey.bin", &Kb) == -1)
     {
         fprintf( log , "\nCould not get Basim's Masker key & IV.\n");
         fprintf( stderr , "\nCould not get Basim's Masker key & IV.\n");
@@ -123,11 +123,6 @@ int main ( int argc , char * argv[] )
 
     fflush( log ) ;
 
-
-    
-        
-    
-
     //*************************************   
     // Construct & Send    Message 2
     //*************************************
@@ -135,6 +130,35 @@ int main ( int argc , char * argv[] )
     BANNER( log ) ;
     fprintf( log , "         MSG2 New\n");
     BANNER( log ) ;
+
+    myKey_t Ks ;
+
+    if (getKeyFromFile("kdc/sessionKey.bin", &Ks) == -1)
+    {
+        fprintf( log , "\nCould not get Session key & IV.\n");
+        fprintf( stderr , "\nCould not get Session key & IV.\n");
+        exit(-1);
+    } else {
+        fprintf( log , "KDC: created this Session key KS { key , IV } is:\n");
+        BIO_dump_indent_fp( log , Ks.key, sizeof(Ks.key), 4);
+    }
+
+    fprintf( log , "\n" );
+	// BIO_dump_fp the IV indented 4 spaces to the right
+    BIO_dump_indent_fp( log , Ks.iv, INITVECTOR_LEN, 4);
+    fprintf( log , "\n" );
+    fflush( log ) ;
+
+    size_t  LenMsg2 ;
+    uint8_t  *msg2 ;
+
+    LenMsg2 = MSG2_new( log , &msg2 , &Ka , &Kb , &Ks, IDa, IDb, &Na);
+    
+    write(fd_K2A, msg2, LenMsg2);
+
+    // Deallocate any memory allocated for msg1
+    free(msg2);
+    fprintf( log , "\n") ;
 
 
     //*************************************   

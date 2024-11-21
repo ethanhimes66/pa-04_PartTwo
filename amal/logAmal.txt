@@ -1,0 +1,36 @@
+***************************************************
+Starting Amal
+***************************************************
+
+<readFrom KDC> FD=5 , <sendTo KDC> FD=4 , <readFrom Basim> FD=9 , <sendTo Basim> FD=8
+
+Amal has this Master Ka { key , IV }
+    0000 - 01 27 48 03 a4 b0 eb 2f-1c bb 05 18 09 6d 45 d9   .'H..../.....mE.
+    0010 - aa 5b 77 69 b8 12 0b 5b-6b d5 cd 59 f2 4c 7c f7   .[wi...[k..Y.L|.
+
+    0000 - 4c 6d 4f a6 a5 91 37 ed-7e fe 34 54 24 4b a0 ed   LmO...7.~.4T$K..
+
+Amal will use these Nonces:  Na  and Na2
+    0000 - 44 33 22 11                                       D3".
+
+    0000 - dd cc bb aa                                       ....
+
+***************************************************
+         MSG1 New
+***************************************************
+The following new MSG1 ( 49 bytes ) has been created by MSG1_new ():
+    0000 - 0d 00 00 00 00 00 00 00-41 6d 61 6c 20 69 73 20   ........Amal is 
+    0010 - 48 6f 70 65 00 10 00 00-00 00 00 00 00 42 61 73   Hope.........Bas
+    0020 - 69 6d 20 69 73 20 53 6d-69 6c 65 79 00 44 33 22   im is Smiley.D3"
+    0030 - 11                                                .
+
+Amal sent message 1 ( 49 bytes ) to the KDC with:
+    IDa ='Amal is Hope'
+    IDb = 'Basim is Smiley'
+    Na ( 4 Bytes ) is:
+    0000 - 44 33 22 11                                       D3".
+
+***************************************************
+         MSG2 Receive
+***************************************************
+Encrypted MSG2 is too big 9720810587149762064 bytes( max is 2048 ) in MSG2_receive()  ... EXITING
