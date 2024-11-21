@@ -179,6 +179,7 @@ int main ( int argc , char * argv[] )
     BIO_dump_indent_fp( log , &Na , NONCELEN , 4 ) ;    fprintf( log , "\n" ) ;
 
     fprintf( log, "    Encrypted Ticket (%lu bytes):\n", tktCipherLen);
+    BIO_dump_indent_fp( log , tktCipher , tktCipherLen , 4 ) ;    fprintf( log , "\n" ) ;
 
     fflush( log ) ;
 

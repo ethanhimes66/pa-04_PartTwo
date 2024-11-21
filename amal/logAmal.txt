@@ -46,3 +46,33 @@ MSG2_receive() got the following Encrypted MSG2 ( 176 bytes ) Successfully
     0090 - 49 97 d1 8a a0 ef 75 0d-fc db d8 41 11 af a0 27   I.....u....A...'
     00a0 - 2d 5a 2a be d5 f1 c0 8e-16 24 d5 7e ba 03 c6 eb   -Z*......$.~....
 
+Amal decrypted message 2 from the KDC into the following:
+    Ks { Key , IV } (48 Bytes ) is:
+    0000 - e9 c4 5c 56 03 c9 ad 47-78 b9 97 5c 4a e6 f2 7f   ..\V...Gx..\J...
+    0010 - 7d ef 6b 03 55 05 b2 0e-9d 35 90 88 67 e7 85 dd   }.k.U....5..g...
+    0020 - 8d ba 5c 47 10 37 c7 50-2f c3 38 eb 57 1c 64 31   ..\G.7.P/.8.W.d1
+
+    IDb (15 Bytes):   ..... MATCH
+    0000 - 60 66 ee 69 06 5d 00 00-a0 88 ea 69 06 5d 00      `f.i.].....i.].
+
+    Received Copy of Na (4 bytes):    >>>> VALID
+    0000 - 44 33 22 11                                       D3".
+
+    Encrypted Ticket (80 bytes):
+    0000 - 67 84 0d 12 2f 1d 1f 72-f1 6f ea 63 70 00 5e 8a   g.../..r.o.cp.^.
+    0010 - 92 33 4b 7b c2 26 c2 0d-c0 9f f2 53 82 af 20 67   .3K{.&.....S.. g
+    0020 - 8b ca 4c 1d 4e 56 20 57-e9 45 cc 3c 43 f7 fd c4   ..L.NV W.E.<C...
+    0030 - 9d f9 b2 72 cc dc 3c 14-38 9b 63 16 08 22 26 3e   ...r..<.8.c.."&>
+    0040 - 7e 1b 2f f3 55 b5 a7 54-26 35 a1 2a 02 06 1b de   ~./.U..T&5.*....
+
+***************************************************
+         MSG3 New
+***************************************************
+***************************************************
+         MSG4 Receive
+***************************************************
+***************************************************
+         MSG5 New
+***************************************************
+
+Amal has terminated normally. Goodbye

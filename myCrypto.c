@@ -763,7 +763,7 @@ void MSG2_receive( FILE *log , int fd , const myKey_t *Ka , myKey_t *Ks, char **
     }
 
     //Read the whole message
-    if (read(fd, ciphertext, LenMsg2) == -1)
+    if (read(fd, &ciphertext[0], LenMsg2) == -1)
     {
         fprintf( log , "Unable to receive all %lu bytes of Msg2 "
                        "in MSG2_receive() ... EXITING\n" , LenMsg2 );
@@ -774,31 +774,40 @@ void MSG2_receive( FILE *log , int fd , const myKey_t *Ka , myKey_t *Ks, char **
 
     fprintf( log ,"MSG2_receive() got the following Encrypted MSG2 ( %lu bytes ) Successfully\n" 
                  , LenMsg2 );
-    BIO_dump_indent_fp ( log , ciphertext , LenMsg2 , 4 ) ;  fprintf( log , "\n") ; 
+    BIO_dump_indent_fp ( log , &ciphertext[0] , LenMsg2 , 4 ) ;  fprintf( log , "\n") ; 
 
-    size_t pMsgLen = decrypt(ciphertext, LenMsg2, Ka->key, Ka->iv, plaintext);
+    size_t pMsgLen = decrypt(&ciphertext[0], LenMsg2, Ka->key, Ka->iv, &plaintext[0]);
 
     uint8_t *p = &plaintext[0];
-    memcpy(Ks->key, p, SYMMETRIC_KEY_LEN);
-    p += SYMMETRIC_KEY_LEN;
 
-    memcpy(Ks->iv, p, INITVECTOR_LEN);
-    p += INITVECTOR_LEN;
+    memcpy(Ks, p, sizeof(Ks->key) + sizeof(Ks->iv));
+    p += sizeof(Ks->key) + sizeof(Ks->iv);
 
     size_t IDblen;
     memcpy(&IDblen, p, sizeof(size_t));
     p += sizeof(size_t);
 
-    memcpy(IDb, p, IDblen);
+    *IDb = (char*) malloc(IDblen);
+    if (*IDb == NULL)
+    {
+      exitError("Memory allocation for IDb failed.");
+    }
+    memcpy(*IDb, p, IDblen);
     p += IDblen;
 
-    // memcpy(Na, p, NONCELEN);
-    // p += NONCELEN;
+    memcpy(Na, p, NONCELEN);
+    p += NONCELEN;
 
-    // memcpy(lenTktCipher, p, sizeof(size_t));
-    // p += sizeof(size_t);
+    memcpy(lenTktCipher, p, sizeof(size_t));
+    p += sizeof(size_t);
 
-    // memcpy(tktCipher, p, *lenTktCipher);
+    *tktCipher = (uint8_t*) malloc(*lenTktCipher);
+    if (*tktCipher == NULL)
+    {
+      exitError("Memory allocation for tktCipher failed.");
+    }
+
+    memcpy(*tktCipher, p, *lenTktCipher);
 }
 
 //-----------------------------------------------------------------------------
