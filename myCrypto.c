@@ -776,7 +776,29 @@ void MSG2_receive( FILE *log , int fd , const myKey_t *Ka , myKey_t *Ks, char **
                  , LenMsg2 );
     BIO_dump_indent_fp ( log , ciphertext , LenMsg2 , 4 ) ;  fprintf( log , "\n") ; 
 
+    size_t pMsgLen = decrypt(ciphertext, LenMsg2, Ka->key, Ka->iv, plaintext);
 
+    uint8_t *p = &plaintext[0];
+    memcpy(Ks->key, p, SYMMETRIC_KEY_LEN);
+    p += SYMMETRIC_KEY_LEN;
+
+    memcpy(Ks->iv, p, INITVECTOR_LEN);
+    p += INITVECTOR_LEN;
+
+    size_t IDblen;
+    memcpy(&IDblen, p, sizeof(size_t));
+    p += sizeof(size_t);
+
+    memcpy(IDb, p, IDblen);
+    p += IDblen;
+
+    // memcpy(Na, p, NONCELEN);
+    // p += NONCELEN;
+
+    // memcpy(lenTktCipher, p, sizeof(size_t));
+    // p += sizeof(size_t);
+
+    // memcpy(tktCipher, p, *lenTktCipher);
 }
 
 //-----------------------------------------------------------------------------

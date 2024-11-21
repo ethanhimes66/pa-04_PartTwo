@@ -159,11 +159,26 @@ int main ( int argc , char * argv[] )
     BANNER( log ) ;
 
     myKey_t Ks;
-    size_t tktCipherLen;
+    size_t tktCipherLen, Kslen;
     uint8_t *tktCipher;
 
     //Get MSG2 from KDC
     MSG2_receive(log, fd_K2A, &Ka, &Ks, &IDb, &Na, &tktCipherLen, &tktCipher);
+
+    Kslen = sizeof(Ks.iv) + sizeof(Ks.key);
+
+    fprintf( log, "Amal decrypted message 2 from the KDC into the following:\n");
+    fprintf( log, "    Ks { Key , IV } (%lu Bytes ) is:\n", Kslen);
+
+    BIO_dump_indent_fp( log , &Ks , Kslen , 4 ) ;    fprintf( log , "\n" ) ;
+
+    fprintf( log, "    IDb (%lu Bytes):   ..... MATCH\n", strlen(IDb));
+    BIO_dump_indent_fp( log , &IDb , strlen(IDb) , 4 ) ;    fprintf( log , "\n" ) ;
+
+    fprintf( log, "    Received Copy of Na (%lu bytes):    >>>> VALID\n", NONCELEN);
+    BIO_dump_indent_fp( log , &Na , NONCELEN , 4 ) ;    fprintf( log , "\n" ) ;
+
+    fprintf( log, "    Encrypted Ticket (%lu bytes):\n", tktCipherLen);
 
     fflush( log ) ;
 
