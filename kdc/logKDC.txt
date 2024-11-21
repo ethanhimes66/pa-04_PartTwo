@@ -30,27 +30,39 @@ KDC received message 1 from Amal with:
 ***************************************************
          MSG2 New
 ***************************************************
-KDC: created this Session key KS { key , IV } is:
+KDC: created this session key Ks { Key , IV } (48 Bytes ) is:
     0000 - e9 c4 5c 56 03 c9 ad 47-78 b9 97 5c 4a e6 f2 7f   ..\V...Gx..\J...
     0010 - 7d ef 6b 03 55 05 b2 0e-9d 35 90 88 67 e7 85 dd   }.k.U....5..g...
+    0020 - 8d ba 5c 47 10 37 c7 50-2f c3 38 eb 57 1c 64 31   ..\G.7.P/.8.W.d1
 
-    0000 - 8d ba 5c 47 10 37 c7 50-2f c3 38 eb 57 1c 64 31   ..\G.7.P/.8.W.d1
+Plaintext Ticket (69 Bytes ) is
+    0000 - e9 c4 5c 56 03 c9 ad 47-78 b9 97 5c 4a e6 f2 7f   ..\V...Gx..\J...
+    0010 - 7d ef 6b 03 55 05 b2 0e-9d 35 90 88 67 e7 85 dd   }.k.U....5..g...
+    0020 - e9 c4 5c 56 03 c9 ad 47-78 b9 97 5c 4a e6 f2 7f   ..\V...Gx..\J...
+    0030 - 0d 00 00 00 00 00 00 00-41 6d 61 6c 20 69 73 20   ........Amal is 
+    0040 - 48 6f 70 65 00                                    Hope.
 
-The following Encrypted MSG2 ( 96 bytes ) has been created by MSG2_new():  
+The following Encrypted MSG2 ( 144 bytes ) has been created by MSG2_new():  
     0000 - 10 fe ea d7 b9 41 e7 86-bc 1b 71 90 34 9a 9c 3b   .....A....q.4..;
     0010 - 52 c7 d8 9f 88 e8 8c 3f-f3 0b 8f ce a9 0f 73 9f   R......?......s.
-    0020 - ec da 0e 4f 97 22 f9 c2-41 08 9e 13 b7 2b 84 45   ...O."..A....+.E
-    0030 - 5a 92 11 84 77 38 e8 05-49 ab c8 d2 c4 ed 92 25   Z...w8..I......%
-    0040 - ba 3c 74 81 16 10 0a 76-96 d0 1f 6f 2d 86 52 67   .<t....v...o-.Rg
-    0050 - 49 36 70 a2 b4 5a 77 39-f6 6c 1d ee e2 96 d2 23   I6p..Zw9.l.....#
+    0020 - 09 3f d8 5f dc 50 17 50-49 2a e6 07 19 23 77 fb   .?._.P.PI*...#w.
+    0030 - 6b 9e 25 d4 6d 73 a5 f1-66 cd 90 db 0b 1e c7 64   k.%.ms..f......d
+    0040 - 6d db 2b e7 12 87 65 86-e6 89 63 b5 61 ec 33 14   m.+...e...c.a.3.
+    0050 - 57 b5 c1 af 3e 22 55 35-df 04 fa 15 51 0e 67 3f   W...>"U5....Q.g?
+    0060 - 90 66 00 b6 3f 7b 8c d5-a8 e8 e9 7d a2 15 83 66   .f..?{.....}...f
+    0070 - fe e5 f2 2a af 8e 1c ee-98 44 4a fe 21 ba 37 dc   ...*.....DJ.!.7.
+    0080 - 8b cc 26 ae 13 ee 72 3e-e5 28 d3 ab 45 28 a6 2c   ..&...r>.(..E(.,
 
-This is the content of MSG2 ( 80 Bytes ) before Encryption:
+This is the content of MSG2 ( 128 Bytes ) before Encryption:
     Ks { key + IV } (48 Bytes) is:
     0000 - e9 c4 5c 56 03 c9 ad 47-10 00 00 00 00 00 00 00   ..\V...G........
     0010 - 42 61 73 69 6d 20 69 73-20 53 6d 69 6c 65 79 00   Basim is Smiley.
-    0020 - 44 33 22 11 01 27 48 03-20 00 00 00 00 00 00 00   D3"..'H. .......
-    0030 - 8b cd c9 f1 d4 d6 2a aa-1c 47 db 7f 3f 8d 63 ba   ......*..G..?.c.
-    0040 - 5e 7e 9c 39 2a 81 cd b0-8a 32 85 9e 85 32 fa 7c   ^~.9*....2...2.|
+    0020 - 44 33 22 11 01 27 48 03-50 00 00 00 00 00 00 00   D3"..'H.P.......
+    0030 - 67 84 0d 12 2f 1d 1f 72-f1 6f ea 63 70 00 5e 8a   g.../..r.o.cp.^.
+    0040 - 92 33 4b 7b c2 26 c2 0d-c0 9f f2 53 82 af 20 67   .3K{.&.....S.. g
+    0050 - 5d 32 b1 68 63 38 3d b4-83 5f e8 d8 a6 fa 6a 0e   ]2.hc8=.._....j.
+    0060 - aa d3 86 d7 34 85 50 51-49 a1 a5 4c be e4 a3 9f   ....4.PQI..L....
+    0070 - c5 db 8a 9d e9 aa 2b e2-05 48 64 60 5a 66 f7 bd   ......+..Hd`Zf..
 
     IDb (16 Bytes) is:
     0000 - 42 61 73 69 6d 20 69 73-20 53 6d 69 6c 65 79 00   Basim is Smiley.
@@ -58,7 +70,13 @@ This is the content of MSG2 ( 80 Bytes ) before Encryption:
     Na (4 Bytes) is:
     0000 - 44 33 22 11 01 27 48 03-                          D3"..'H.
 
-    Encrypted Ticket (32 Bytes) is
-    0000 - 8b cd c9 f1 d4 d6 2a aa-1c 47 db 7f 3f 8d 63 ba   ......*..G..?.c.
-    0010 - 5e 7e 9c 39 2a 81 cd b0-8a 32 85 9e 85 32 fa 7c   ^~.9*....2...2.|
+    Encrypted Ticket (80 Bytes) is
+    0000 - 67 84 0d 12 2f 1d 1f 72-f1 6f ea 63 70 00 5e 8a   g.../..r.o.cp.^.
+    0010 - 92 33 4b 7b c2 26 c2 0d-c0 9f f2 53 82 af 20 67   .3K{.&.....S.. g
+    0020 - 5d 32 b1 68 63 38 3d b4-83 5f e8 d8 a6 fa 6a 0e   ]2.hc8=.._....j.
+    0030 - aa d3 86 d7 34 85 50 51-49 a1 a5 4c be e4 a3 9f   ....4.PQI..L....
+    0040 - c5 db 8a 9d e9 aa 2b e2-05 48 64 60 5a 66 f7 bd   ......+..Hd`Zf..
 
+
+
+The KDC has terminated normally. Goodbye

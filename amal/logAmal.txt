@@ -33,4 +33,15 @@ Amal sent message 1 ( 49 bytes ) to the KDC with:
 ***************************************************
          MSG2 Receive
 ***************************************************
-Encrypted MSG2 is too big 9720810587149762064 bytes( max is 2048 ) in MSG2_receive()  ... EXITING
+MSG2_receive() got the following Encrypted MSG2 ( 144 bytes ) Successfully
+    0000 - 10 fe ea d7 b9 41 e7 86-bc 1b 71 90 34 9a 9c 3b   .....A....q.4..;
+    0010 - 52 c7 d8 9f 88 e8 8c 3f-f3 0b 8f ce a9 0f 73 9f   R......?......s.
+    0020 - 09 3f d8 5f dc 50 17 50-49 2a e6 07 19 23 77 fb   .?._.P.PI*...#w.
+    0030 - 6b 9e 25 d4 6d 73 a5 f1-66 cd 90 db 0b 1e c7 64   k.%.ms..f......d
+    0040 - 6d db 2b e7 12 87 65 86-e6 89 63 b5 61 ec 33 14   m.+...e...c.a.3.
+    0050 - 57 b5 c1 af 3e 22 55 35-df 04 fa 15 51 0e 67 3f   W...>"U5....Q.g?
+    0060 - 90 66 00 b6 3f 7b 8c d5-a8 e8 e9 7d a2 15 83 66   .f..?{.....}...f
+    0070 - fe e5 f2 2a af 8e 1c ee-98 44 4a fe 21 ba 37 dc   ...*.....DJ.!.7.
+    0080 - 8b cc 26 ae 13 ee 72 3e-e5 28 d3 ab 45 28 a6 2c   ..&...r>.(..E(.,
+
+Out of memory allocating 8223323532605359207 bytes for IDB in MSG2_receive() ... EXITING

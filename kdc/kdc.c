@@ -139,13 +139,10 @@ int main ( int argc , char * argv[] )
         fprintf( stderr , "\nCould not get Session key & IV.\n");
         exit(-1);
     } else {
-        fprintf( log , "KDC: created this Session key KS { key , IV } is:\n");
-        BIO_dump_indent_fp( log , Ks.key, sizeof(Ks.key), 4);
+        fprintf( log , "KDC: created this session key Ks { Key , IV } (%lu Bytes ) is:\n", sizeof(Ks));
+        BIO_dump_indent_fp( log , &Ks, sizeof(Ks), 4);
     }
 
-    fprintf( log , "\n" );
-	// BIO_dump_fp the IV indented 4 spaces to the right
-    BIO_dump_indent_fp( log , Ks.iv, INITVECTOR_LEN, 4);
     fprintf( log , "\n" );
     fflush( log ) ;
 
@@ -153,7 +150,7 @@ int main ( int argc , char * argv[] )
     uint8_t  *msg2 ;
 
     LenMsg2 = MSG2_new( log , &msg2 , &Ka , &Kb , &Ks, IDa, IDb, &Na);
-    
+    write (fd_K2A, &LenMsg2, sizeof(LenMsg2));
     write(fd_K2A, msg2, LenMsg2);
 
     // Deallocate any memory allocated for msg1

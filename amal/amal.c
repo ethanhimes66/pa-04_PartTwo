@@ -165,16 +165,6 @@ int main ( int argc , char * argv[] )
     //Get MSG2 from KDC
     MSG2_receive(log, fd_K2A, &Ka, &Ks, &IDb, &Na, &tktCipherLen, &tktCipher);
 
-    fprintf( log , "\nKDC received message 1 from Amal with:\n"
-                   "    Ka = '%s'\n"
-                   "    Ks = '%s'\n" 
-                   "    IDb = '%s'\n" , Ka.key, Ks.key , IDb ) ;
-
-    printf( log , "    Na ( %lu Bytes ) is:\n" , NONCELEN ) ;
-     // BIO_dump_fp the nonce Na
-    BIO_dump_indent_fp( log , Na, NONCELEN, 4);
-    fprintf( log , "\n" );
-
     fflush( log ) ;
 
     //*************************************
