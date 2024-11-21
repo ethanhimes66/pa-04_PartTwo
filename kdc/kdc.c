@@ -150,12 +150,14 @@ int main ( int argc , char * argv[] )
     uint8_t  *msg2 ;
 
     LenMsg2 = MSG2_new( log , &msg2 , &Ka , &Kb , &Ks, IDa, IDb, &Na);
+
+    fprintf( log , "The KDC sent the Encrypted MSG2 ( %lu bytes ) to Amal Successfully\n", LenMsg2);
+
     write (fd_K2A, &LenMsg2, sizeof(LenMsg2));
     write(fd_K2A, msg2, LenMsg2);
 
     // Deallocate any memory allocated for msg1
     free(msg2);
-    fprintf( log , "\n") ;
 
 
     //*************************************   

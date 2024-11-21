@@ -652,10 +652,10 @@ size_t MSG2_new( FILE *log , uint8_t **msg2, const myKey_t *Ka , const myKey_t *
     size_t TktPlainLen = sizeof(Ks->key) + sizeof(Ks->iv) + sizeof(LenIDa) + LenIDa;
     uint8_t *p = &plaintext[0];
 
-    memcpy(p, Ks, sizeof(Ks->key));
+    memcpy(p, Ks->key, sizeof(Ks->key));
     p += sizeof(Ks->key);
 
-    memcpy(p, Ks, sizeof(Ks->iv));
+    memcpy(p, Ks->iv, sizeof(Ks->iv));
     p += sizeof(Ks->iv);
 
     memcpy(p, &LenIDa, sizeof(LenIDa));
@@ -679,9 +679,13 @@ size_t MSG2_new( FILE *log , uint8_t **msg2, const myKey_t *Ka , const myKey_t *
     p = &plaintext[0];
     size_t plaintextlen = 0;
 
-    memcpy(p, Ks, sizeof(Ks));
-    p += sizeof(Ks);
-    plaintextlen += sizeof(Ks);
+    memcpy(p, Ks->key, sizeof(Ks->key));
+    p += sizeof(Ks->key);
+    plaintextlen += sizeof(Ks->key);
+
+    memcpy(p, Ks->iv, sizeof(Ks->iv));
+    p += sizeof(Ks->iv);
+    plaintextlen += sizeof(Ks->iv);
 
     memcpy(p, &LenIDb, sizeof(LenIDb));
     p += sizeof(LenIDb);
@@ -691,9 +695,9 @@ size_t MSG2_new( FILE *log , uint8_t **msg2, const myKey_t *Ka , const myKey_t *
     p += LenIDb;
     plaintextlen += LenIDb;
 
-    memcpy(p, Na, sizeof(Na));
-    p += sizeof(Na);
-    plaintextlen += sizeof(Na);
+    memcpy(p, Na, NONCELEN);
+    p += NONCELEN;
+    plaintextlen += NONCELEN;
 
     memcpy(p, &TktCipherLen, sizeof(TktCipherLen));
     p += sizeof(TktCipherLen);
@@ -722,13 +726,13 @@ size_t MSG2_new( FILE *log , uint8_t **msg2, const myKey_t *Ka , const myKey_t *
 
     fprintf( log ,"This is the content of MSG2 ( %lu Bytes ) before Encryption:\n" ,  plaintextlen );  
     fprintf( log ,"    Ks { key + IV } (%lu Bytes) is:\n" , KEYSIZE );
-    BIO_dump_indent_fp ( log , plaintext , plaintextlen , 4 ) ;  fprintf( log , "\n") ; 
+    BIO_dump_indent_fp ( log , plaintext , sizeof(Ks->key) + sizeof(Ks->iv) , 4 ) ;  fprintf( log , "\n") ; 
 
     fprintf( log ,"    IDb (%lu Bytes) is:\n" , LenIDb);
     BIO_dump_indent_fp ( log , IDb , LenIDb , 4 ) ;  fprintf( log , "\n") ; 
 
     fprintf( log ,"    Na (%lu Bytes) is:\n" , NONCELEN);
-    BIO_dump_indent_fp ( log , Na , sizeof(Na) , 4 ) ;  fprintf( log , "\n") ; 
+    BIO_dump_indent_fp ( log , Na , NONCELEN , 4 ) ;  fprintf( log , "\n") ; 
 
     fprintf( log ,"    Encrypted Ticket (%lu Bytes) is\n" ,  TktCipherLen );
     BIO_dump_indent_fp ( log , ciphertext , TktCipherLen , 4 ) ;  fprintf( log , "\n") ; 
