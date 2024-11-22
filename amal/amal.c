@@ -191,6 +191,20 @@ int main ( int argc , char * argv[] )
     fprintf( log , "         MSG3 New\n");
     BANNER( log ) ;
 
+    size_t  LenMsg3 ;
+    uint8_t  *msg3 ;
+
+    fprintf (log, "Amal is sending this to Basim in Message 3:\n");
+    fprintf(log, "    Na2 in Message 3:\n");
+    BIO_dump_indent_fp( log, &Na2 , NONCELEN, 4);
+    fprintf( log , "\n") ;
+
+    LenMsg3 = MSG3_new( log , &msg3 , tktCipherLen , tktCipher , &Na2 ) ;
+    
+    fprintf( log , "Amal Sent the Message 3 ( %lu bytes ) to Basim\n", LenMsg3);
+    fprintf( log , "\n") ;
+
+
     //*************************************
     // Receive   & Process Message 4
     //*************************************

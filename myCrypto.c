@@ -820,8 +820,27 @@ void MSG2_receive( FILE *log , int fd , const myKey_t *Ka , myKey_t *Ks, char **
 size_t MSG3_new( FILE *log , uint8_t **msg3 , const size_t lenTktCipher , const uint8_t *tktCipher,  
                    const Nonce_t *Na2 )
 {
+    size_t    LenMsg3 = 0;
+    uint8_t *p = &ciphertext2[0];
 
-    size_t    LenMsg3 ;
+    memcpy(p, &lenTktCipher, sizeof(size_t));
+    p += sizeof(size_t);
+    LenMsg3 += sizeof(size_t);
+
+    memcpy(p, tktCipher, lenTktCipher);
+    p += lenTktCipher;
+    LenMsg3 += lenTktCipher;
+
+    memcpy(p, Na2, NONCELEN);
+    LenMsg3 += NONCELEN;
+
+    *msg3 = (uint8_t*) malloc(LenMsg3);
+    if (*msg3 == NULL)
+    {
+      exitError("Memory allocation for new message failed.");
+    }
+
+    memcpy(*msg3, ciphertext2, LenMsg3);
 
     fprintf( log , "The following MSG3 ( %lu bytes ) has been created by "
                    "MSG3_new ():\n" , LenMsg3 ) ;

@@ -68,6 +68,20 @@ Amal decrypted message 2 from the KDC into the following:
 ***************************************************
          MSG3 New
 ***************************************************
+Amal is sending this to Basim in Message 3:
+    Na2 in Message 3:
+    0000 - dd cc bb aa                                       ....
+
+The following MSG3 ( 92 bytes ) has been created by MSG3_new ():
+    0000 - 50 00 00 00 00 00 00 00-67 84 0d 12 2f 1d 1f 72   P.......g.../..r
+    0010 - f1 6f ea 63 70 00 5e 8a-92 33 4b 7b c2 26 c2 0d   .o.cp.^..3K{.&..
+    0020 - c0 9f f2 53 82 af 20 67-8b ca 4c 1d 4e 56 20 57   ...S.. g..L.NV W
+    0030 - e9 45 cc 3c 43 f7 fd c4-9d f9 b2 72 cc dc 3c 14   .E.<C......r..<.
+    0040 - 38 9b 63 16 08 22 26 3e-7e 1b 2f f3 55 b5 a7 54   8.c.."&>~./.U..T
+    0050 - 26 35 a1 2a 02 06 1b de-dd cc bb aa               &5.*........
+
+Amal Sent the Message 3 ( 92 bytes ) to Basim
+
 ***************************************************
          MSG4 Receive
 ***************************************************
