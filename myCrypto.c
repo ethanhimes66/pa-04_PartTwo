@@ -708,7 +708,7 @@ size_t MSG2_new( FILE *log , uint8_t **msg2, const myKey_t *Ka , const myKey_t *
 
     // Now, encrypt Message 2 using Ka. 
     // Use the global scratch buffer ciphertext2[] to collect the results
-    size_t Msg2Len = encrypt( &plaintext[0] , plaintextlen, Ka->key, Ka->iv, &ciphertext[0]);
+    size_t Msg2Len = encrypt( &plaintext[0] , plaintextlen, Ka->key, Ka->iv, &ciphertext2[0]);
 
     // allocate memory on behalf of the caller for a copy of MSG2 ciphertext
     *msg2 = (uint8_t*) malloc(Msg2Len);
