@@ -173,7 +173,7 @@ int main ( int argc , char * argv[] )
     BIO_dump_indent_fp( log , &Ks , Kslen , 4 ) ;    fprintf( log , "\n" ) ;
 
     fprintf( log, "    IDb (%lu Bytes):   ..... MATCH\n", strlen(IDb));
-    BIO_dump_indent_fp( log , &IDb , strlen(IDb) , 4 ) ;    fprintf( log , "\n" ) ;
+    BIO_dump_indent_fp( log , IDb , strlen(IDb) + 1 , 4 ) ;    fprintf( log , "\n" ) ;
 
     fprintf( log, "    Received Copy of Na (%lu bytes):    >>>> VALID\n", NONCELEN);
     BIO_dump_indent_fp( log , &Na , NONCELEN , 4 ) ;    fprintf( log , "\n" ) ;

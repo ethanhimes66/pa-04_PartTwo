@@ -668,7 +668,7 @@ size_t MSG2_new( FILE *log , uint8_t **msg2, const myKey_t *Ka , const myKey_t *
 
     // Now, set TktCipher = encrypt( Kb , plaintext );
     // Store the result in the global scratch buffer ciphertext[]
-    size_t TktCipherLen = encrypt( plaintext , TktPlainLen, Kb->key, Kb->iv, ciphertext);
+    size_t TktCipherLen = encrypt( &plaintext[0] , TktPlainLen, Kb->key, Kb->iv, &ciphertext[0]);
 
     //---------------------------------------------------------------------------------------
     // Construct the rest of Message 2 then encrypt it using Ka
@@ -708,7 +708,7 @@ size_t MSG2_new( FILE *log , uint8_t **msg2, const myKey_t *Ka , const myKey_t *
 
     // Now, encrypt Message 2 using Ka. 
     // Use the global scratch buffer ciphertext2[] to collect the results
-    size_t Msg2Len = encrypt( plaintext , plaintextlen, Ka->key, Ka->iv, ciphertext2);
+    size_t Msg2Len = encrypt( &plaintext[0] , plaintextlen, Ka->key, Ka->iv, &ciphertext[0]);
 
     // allocate memory on behalf of the caller for a copy of MSG2 ciphertext
     *msg2 = (uint8_t*) malloc(Msg2Len);
@@ -778,20 +778,21 @@ void MSG2_receive( FILE *log , int fd , const myKey_t *Ka , myKey_t *Ks, char **
 
     size_t pMsgLen = decrypt(&ciphertext[0], LenMsg2, Ka->key, Ka->iv, &plaintext[0]);
 
-    uint8_t *p = &plaintext[0];
+    char *p = &plaintext[0];
 
     memcpy(Ks, p, sizeof(Ks->key) + sizeof(Ks->iv));
     p += sizeof(Ks->key) + sizeof(Ks->iv);
 
     size_t IDblen;
-    memcpy(&IDblen, p, sizeof(size_t));
+    memcpy(&IDblen, p, sizeof(IDblen));
     p += sizeof(size_t);
 
-    *IDb = (char*) malloc(IDblen);
+    *IDb = (char*) malloc(IDblen + 1);
     if (*IDb == NULL)
     {
       exitError("Memory allocation for IDb failed.");
     }
+
     memcpy(*IDb, p, IDblen);
     p += IDblen;
 
