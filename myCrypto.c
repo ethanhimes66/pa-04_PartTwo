@@ -976,8 +976,37 @@ size_t  MSG4_new( FILE *log , uint8_t **msg4, const myKey_t *Ks , Nonce_t *fNa2 
 
 void  MSG4_receive( FILE *log , int fd , const myKey_t *Ks , Nonce_t *rcvd_fNa2 , Nonce_t *Nb )
 {
+    size_t lenMsg4 = 0;
+    if (read(fd, &lenMsg4, sizeof(size_t)) == -1)
+    {
+        fprintf( log , "Unable to receive all %lu bytes of Len(Msg4) "
+                       "in MSG4_receive() ... EXITING\n" , LENSIZE );
+        
+        fflush( log ) ;  fclose( log ) ;
+        exitError( "Unable to receive all bytes Len(Msg4) in MSG4_receive()" );
+    }
 
+    //Read the ticket
+    if (read(fd, &ciphertext[0], lenMsg4) == -1)
+    {
+        fprintf( log , "Unable to receive all %lu bytes of Msg4 "
+                       "in MSG4_receive() ... EXITING\n" , lenMsg4 );
+        
+        fflush( log ) ;  fclose( log ) ;
+        exitError( "Unable to receive all bytes Ms4 in MSG3_receive()" );
+    }
 
+    fprintf( log, "The following Encrypted MSG4 ( %lu bytes ) was received:\n", lenMsg4 );
+    BIO_dump_indent_fp( log, &ciphertext[0] , lenMsg4, 4);
+
+    size_t lenplain = decrypt(&ciphertext[0], lenMsg4, Ks->key, Ks->iv, &plaintext[0]);
+
+    char *p = &plaintext[0];
+
+    memcpy(rcvd_fNa2, p, NONCELEN);
+    p += NONCELEN;
+
+    memcpy(Nb, p, NONCELEN);
 }
 
 //-----------------------------------------------------------------------------

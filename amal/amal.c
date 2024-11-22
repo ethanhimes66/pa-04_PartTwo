@@ -144,11 +144,7 @@ int main ( int argc , char * argv[] )
 
     // Deallocate any memory allocated for msg1
     free(msg1);
-    fprintf( log , "\n") ;
-
-    
-    
-    
+    fprintf( log , "\n") ; 
     
     //*************************************
     // Receive   &   Process Message 2
@@ -162,6 +158,11 @@ int main ( int argc , char * argv[] )
     size_t tktCipherLen, Kslen;
     uint8_t *tktCipher;
 
+    Nonce_t tempNa;
+    getNonce4Amal(1, tempNa);
+
+    char *tempIDb = "Basim is Smiley";
+
     //Get MSG2 from KDC
     MSG2_receive(log, fd_K2A, &Ka, &Ks, &IDb, &Na, &tktCipherLen, &tktCipher);
 
@@ -172,11 +173,19 @@ int main ( int argc , char * argv[] )
 
     BIO_dump_indent_fp( log , &Ks , Kslen , 4 ) ;    fprintf( log , "\n" ) ;
 
-    fprintf( log, "    IDb (%lu Bytes):   ..... MATCH\n", strlen(IDb));
-    BIO_dump_indent_fp( log , IDb , strlen(IDb) + 1 , 4 ) ;    fprintf( log , "\n" ) ;
+    if (memcmp(tempIDb, IDb, strlen(IDb) + 1) == 0) {
+        fprintf( log, "    IDb (%lu Bytes):   ..... MATCH\n", strlen(IDb));
+        BIO_dump_indent_fp( log , IDb , strlen(IDb) + 1 , 4 ) ;    fprintf( log , "\n" ) ;
+    } else {
+        exitError("IDb's don't match");
+    }
 
-    fprintf( log, "    Received Copy of Na (%lu bytes):    >>>> VALID\n", NONCELEN);
-    BIO_dump_indent_fp( log , &Na , NONCELEN , 4 ) ;    fprintf( log , "\n" ) ;
+    if (memcmp(tempNa, Na, NONCELEN) == 0) {
+        fprintf( log, "    Received Copy of Na (%lu bytes):    >>>> VALID\n", NONCELEN);
+        BIO_dump_indent_fp( log , &Na , NONCELEN , 4 ) ;    fprintf( log , "\n" ) ;
+    } else {
+        exitError("Nonces don't match");
+    }
 
     fprintf( log, "    Encrypted Ticket (%lu bytes):\n", tktCipherLen);
     BIO_dump_indent_fp( log , tktCipher , tktCipherLen , 4 ) ;    fprintf( log , "\n" ) ;
@@ -214,6 +223,30 @@ int main ( int argc , char * argv[] )
     BANNER( log ) ;
     fprintf( log , "         MSG4 Receive\n");
     BANNER( log ) ;
+
+    Nonce_t Nb, rcvd_fNa2, exp_fNa2;
+
+    MSG4_receive( log, fd_B2A, &Ks, &rcvd_fNa2, &Nb);
+    fprintf( log , "\n") ;
+    fprintf( log , "\n") ;
+
+    fNonce(exp_fNa2, Na2);
+
+    fprintf(log, "Amal is expecting back this f( Na2 ) in MSG4:\n");
+    BIO_dump_indent_fp( log, &exp_fNa2 , NONCELEN, 4);
+    fprintf( log , "\n") ;
+
+    if (memcmp(exp_fNa2, rcvd_fNa2, NONCELEN) == 0) {
+        fprintf(log, "Basim returned the following f( Na2 )   >>>> VALID\n");
+        BIO_dump_indent_fp( log, &rcvd_fNa2 , NONCELEN, 4);
+        fprintf( log , "\n") ;
+    } else {
+        exitError("Nonces don't match");
+    }
+
+    fprintf(log, "Amal also received this Nb :\n");
+    BIO_dump_indent_fp( log, &Nb , NONCELEN, 4);  
+    fprintf( log , "\n") ;
 
     //*************************************
     // Construct & Send    Message 5

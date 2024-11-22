@@ -52,7 +52,7 @@ Amal decrypted message 2 from the KDC into the following:
     0010 - 7d ef 6b 03 55 05 b2 0e-9d 35 90 88 67 e7 85 dd   }.k.U....5..g...
     0020 - 8d ba 5c 47 10 37 c7 50-2f c3 38 eb 57 1c 64 31   ..\G.7.P/.8.W.d1
 
-    IDb (16 Bytes):   ..... MATCH
+    IDb (15 Bytes):   ..... MATCH
     0000 - 42 61 73 69 6d 20 69 73-20 53 6d 69 6c 65 79 00   Basim is Smiley.
 
     Received Copy of Na (4 bytes):    >>>> VALID
@@ -85,4 +85,21 @@ Amal Sent the Message 3 ( 92 bytes ) to Basim
 ***************************************************
          MSG4 Receive
 ***************************************************
-Ciphertext too big 10182756649537255907 bytes( max is 2048 ) in MSG4_receive() ... EXITING
+The following Encrypted MSG4 ( 16 bytes ) was received:
+    0000 - e3 39 ea e1 38 6b 50 8d-42 25 dc 41 18 8f 2b 37   .9..8kP.B%.A..+7
+
+
+Amal is expecting back this f( Na2 ) in MSG4:
+    0000 - dd cc bb ab                                       ....
+
+Basim returned the following f( Na2 )   >>>> VALID
+    0000 - dd cc bb ab                                       ....
+
+Amal also received this Nb :
+    0000 - 99 88 77 66                                       ..wf
+
+***************************************************
+         MSG5 New
+***************************************************
+
+Amal has terminated normally. Goodbye

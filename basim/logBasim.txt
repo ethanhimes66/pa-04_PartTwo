@@ -2,7 +2,7 @@
 Starting Basim
 ***************************************************
 
-<readFrom Amal> FD=7 , <sendTo Amal> FD=10
+<readFr. Amal> FD=7 , <sendTo Amal> FD=10
 
 Basim has this Master Kb { key , IV }
     0000 - 72 17 92 80 3c 7d 1d c5-6a 13 78 1d e0 55 10 21   r...<}..j.x..U.!
@@ -57,5 +57,7 @@ Basim Sent the above MSG4 to Amal
 ***************************************************
          MSG5 Receive
 ***************************************************
+Basim is expecting back this f( Nb ) in MSG5:
+    0000 - 99 88 77 67                                       ..wg
 
-Basim has terminated normally. Goodbye
+Unable to read all 8 bytes of LenMSG5cipher from FD 7 in MSG5_receive() ... EXITING
