@@ -201,6 +201,8 @@ int main ( int argc , char * argv[] )
 
     LenMsg3 = MSG3_new( log , &msg3 , tktCipherLen , tktCipher , &Na2 ) ;
     
+    write(fd_A2B, msg3, LenMsg3);
+
     fprintf( log , "Amal Sent the Message 3 ( %lu bytes ) to Basim\n", LenMsg3);
     fprintf( log , "\n") ;
 

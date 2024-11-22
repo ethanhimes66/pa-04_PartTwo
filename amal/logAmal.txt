@@ -52,7 +52,7 @@ Amal decrypted message 2 from the KDC into the following:
     0010 - 7d ef 6b 03 55 05 b2 0e-9d 35 90 88 67 e7 85 dd   }.k.U....5..g...
     0020 - 8d ba 5c 47 10 37 c7 50-2f c3 38 eb 57 1c 64 31   ..\G.7.P/.8.W.d1
 
-    IDb (15 Bytes):   ..... MATCH
+    IDb (16 Bytes):   ..... MATCH
     0000 - 42 61 73 69 6d 20 69 73-20 53 6d 69 6c 65 79 00   Basim is Smiley.
 
     Received Copy of Na (4 bytes):    >>>> VALID
@@ -85,8 +85,4 @@ Amal Sent the Message 3 ( 92 bytes ) to Basim
 ***************************************************
          MSG4 Receive
 ***************************************************
-***************************************************
-         MSG5 New
-***************************************************
-
-Amal has terminated normally. Goodbye
+Unable to read all 8 bytes of LenMSG4cipher from FD 9 in MSG4_receive() ... EXITING

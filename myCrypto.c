@@ -861,18 +861,63 @@ size_t MSG3_new( FILE *log , uint8_t **msg3 , const size_t lenTktCipher , const 
 void MSG3_receive( FILE *log , int fd , const myKey_t *Kb , myKey_t *Ks , char **IDa , Nonce_t *Na2 )
 {
 
+    size_t lenTktCipher = 0;
+    if (read(fd, &lenTktCipher, sizeof(size_t)) == -1)
+    {
+        fprintf( log , "Unable to receive all %lu bytes of Len(TicketCipher) "
+                       "in MSG3_receive() ... EXITING\n" , LENSIZE );
+        
+        fflush( log ) ;  fclose( log ) ;
+        exitError( "Unable to receive all bytes Len(TicketCipher) in MSG3_receive()" );
+    }
+
+    //Read the ticket
+    if (read(fd, &ciphertext[0], lenTktCipher) == -1)
+    {
+        fprintf( log , "Unable to receive all %lu bytes of Msg3 "
+                       "in MSG3_receive() ... EXITING\n" , lenTktCipher );
+        
+        fflush( log ) ;  fclose( log ) ;
+        exitError( "Unable to receive all bytes Msg3 in MSG3_receive()" );
+    }
+
+    if (read(fd, Na2, NONCELEN) == -1)
+    {
+        fprintf( log , "Unable to receive all %lu bytes of Na2 "
+                       "in MSG3_receive() ... EXITING\n" , NONCELEN );
+        
+        fflush( log ) ;  fclose( log ) ;
+        exitError( "Unable to receive all bytes Na2 in MSG3_receive()" );
+    }
 
 
-    // fprintf( log ,"The following Encrypted TktCipher ( %lu bytes ) was received by MSG3_receive()\n" 
-    //              , ....  );
-    // BIO_dump_indent_fp( log , ciphertext , lenTktCipher , 4 ) ;   fprintf( log , "\n");
-    // fflush( log ) ;
+    fprintf( log ,"The following Encrypted TktCipher ( %lu bytes ) was received by MSG3_receive()\n" 
+                 , lenTktCipher  );
+    BIO_dump_indent_fp( log , ciphertext , lenTktCipher , 4 ) ;   fprintf( log , "\n");
+    fflush( log ) ;
 
+    size_t lenTktPlain = decrypt(&ciphertext[0], lenTktCipher, Kb->key, Kb->iv, &decryptext[0]);
 
+    char *p = &decryptext[0];
 
-    // fprintf( log ,"Here is the Decrypted Ticket ( %lu bytes ) in MSG3_receive():\n" , lenTktPlain ) ;
-    // BIO_dump_indent_fp( log , decryptext , ..... , 4 ) ;   fprintf( log , "\n");
-    // fflush( log ) ;
+    memcpy(Ks, p, sizeof(Ks->key) + sizeof(Ks->iv));
+    p += sizeof(Ks->key) + sizeof(Ks->iv);
+
+    size_t LenIDa;
+    memcpy(&LenIDa, p, sizeof(size_t));
+    p += sizeof(size_t);
+
+    *IDa = (uint8_t*) malloc(LenIDa);
+    if (*IDa == NULL)
+    {
+      exitError("Memory allocation for new message failed.");
+    }
+
+    memcpy(*IDa, p, LenIDa);
+
+    fprintf( log ,"Here is the Decrypted Ticket ( %lu bytes ) in MSG3_receive():\n" , lenTktPlain ) ;
+    BIO_dump_indent_fp( log , decryptext , lenTktPlain , 4 ) ;   fprintf( log , "\n");
+    fflush( log ) ;
 
 
 

@@ -107,10 +107,6 @@ int main ( int argc , char * argv[] )
 
     fflush( log ) ;    
     
-
-
-
-    
     //*************************************
     // Receive  & Process   Message 3
     //*************************************
@@ -118,6 +114,24 @@ int main ( int argc , char * argv[] )
     BANNER( log ) ;
     fprintf( log , "         MSG3 Receive\n");
     BANNER( log ) ;
+    Nonce_t Na2;
+    myKey_t   Ks;
+    size_t tktCipherLen;
+    uint8_t *tktCipher;
+    char *IDa;
+
+    //Get MSG3 from Amal
+    MSG3_receive(log, fd_A2B, &Kb, &Ks, &IDa, &Na2);
+
+    fprintf( log , "Basim received Message 3 from Amal with the following content:\n");
+    fprintf( log , "    Ks { Key , IV } (%lu Bytes ) is:\n", sizeof(Ks));
+    BIO_dump_indent_fp( log , &Ks, sizeof(Ks), 4);
+    fprintf( log , "\n" );
+
+    fprintf( log , "    IDa = '%s'\n", IDa);
+    fprintf( log , "    Na2 ( %lu Bytes ) is:\n", NONCELEN);
+    BIO_dump_indent_fp( log , Na2, NONCELEN, 4);
+    fprintf( log , "\n" );
 
     //*************************************
     // Construct & Send    Message 4

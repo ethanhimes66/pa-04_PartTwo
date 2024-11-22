@@ -2,7 +2,7 @@
 Starting Basim
 ***************************************************
 
-<readFr. Amal> FD=7 , <sendTo Amal> FD=10
+<readFrom Amal> FD=7 , <sendTo Amal> FD=10
 
 Basim has this Master Kb { key , IV }
     0000 - 72 17 92 80 3c 7d 1d c5-6a 13 78 1d e0 55 10 21   r...<}..j.x..U.!
@@ -16,4 +16,35 @@ Basim will use this Nonce:  Nb
 ***************************************************
          MSG3 Receive
 ***************************************************
-Unable to receive all 8 bytes of lenTktCipher from FD 7 in MSG3_receive() ... EXITING
+The following Encrypted TktCipher ( 80 bytes ) was received by MSG3_receive()
+    0000 - 67 84 0d 12 2f 1d 1f 72-f1 6f ea 63 70 00 5e 8a   g.../..r.o.cp.^.
+    0010 - 92 33 4b 7b c2 26 c2 0d-c0 9f f2 53 82 af 20 67   .3K{.&.....S.. g
+    0020 - 8b ca 4c 1d 4e 56 20 57-e9 45 cc 3c 43 f7 fd c4   ..L.NV W.E.<C...
+    0030 - 9d f9 b2 72 cc dc 3c 14-38 9b 63 16 08 22 26 3e   ...r..<.8.c.."&>
+    0040 - 7e 1b 2f f3 55 b5 a7 54-26 35 a1 2a 02 06 1b de   ~./.U..T&5.*....
+
+Here is the Decrypted Ticket ( 69 bytes ) in MSG3_receive():
+    0000 - e9 c4 5c 56 03 c9 ad 47-78 b9 97 5c 4a e6 f2 7f   ..\V...Gx..\J...
+    0010 - 7d ef 6b 03 55 05 b2 0e-9d 35 90 88 67 e7 85 dd   }.k.U....5..g...
+    0020 - 8d ba 5c 47 10 37 c7 50-2f c3 38 eb 57 1c 64 31   ..\G.7.P/.8.W.d1
+    0030 - 0d 00 00 00 00 00 00 00-41 6d 61 6c 20 69 73 20   ........Amal is 
+    0040 - 48 6f 70 65 00                                    Hope.
+
+Basim received Message 3 from Amal with the following content:
+    Ks { Key , IV } (48 Bytes ) is:
+    0000 - e9 c4 5c 56 03 c9 ad 47-78 b9 97 5c 4a e6 f2 7f   ..\V...Gx..\J...
+    0010 - 7d ef 6b 03 55 05 b2 0e-9d 35 90 88 67 e7 85 dd   }.k.U....5..g...
+    0020 - 8d ba 5c 47 10 37 c7 50-2f c3 38 eb 57 1c 64 31   ..\G.7.P/.8.W.d1
+
+    IDa = 'Amal is Hope'
+    Na2 ( 4 Bytes ) is:
+    0000 - dd cc bb aa                                       ....
+
+***************************************************
+         MSG4 New
+***************************************************
+***************************************************
+         MSG5 Receive
+***************************************************
+
+Basim has terminated normally. Goodbye
