@@ -43,6 +43,17 @@ Basim received Message 3 from Amal with the following content:
 ***************************************************
          MSG4 New
 ***************************************************
+Basim is sending this f( Na2 ) in MSG4:
+    0000 - dd cc bb ab                                       ....
+
+Basim is sending this nonce Nb in MSG4:
+    0000 - 99 88 77 66                                       ..wf
+
+The following Encrypted MSG4 ( 16 bytes ) has been created by MSG4_new ():  
+    0000 - e3 39 ea e1 38 6b 50 8d-42 25 dc 41 18 8f 2b 37   .9..8kP.B%.A..+7
+
+Basim Sent the above MSG4 to Amal
+
 ***************************************************
          MSG5 Receive
 ***************************************************

@@ -85,4 +85,4 @@ Amal Sent the Message 3 ( 92 bytes ) to Basim
 ***************************************************
          MSG4 Receive
 ***************************************************
-Unable to read all 8 bytes of LenMSG4cipher from FD 9 in MSG4_receive() ... EXITING
+Ciphertext too big 10182756649537255907 bytes( max is 2048 ) in MSG4_receive() ... EXITING

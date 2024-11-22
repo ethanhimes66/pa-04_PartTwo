@@ -141,6 +141,29 @@ int main ( int argc , char * argv[] )
     fprintf( log , "         MSG4 New\n");
     BANNER( log ) ;
 
+    Nonce_t fNa2;
+    uint8_t *msg4;
+
+    fNonce(fNa2, Na2);
+
+    fprintf( log , "Basim is sending this f( Na2 ) in MSG4:\n");
+    BIO_dump_indent_fp( log , fNa2, NONCELEN, 4);
+    fprintf( log , "\n" );
+
+    fprintf( log , "Basim is sending this nonce Nb in MSG4:\n");
+    BIO_dump_indent_fp( log , Nb, NONCELEN, 4);
+
+    fprintf( log , "\n" );
+
+    size_t LenMsg4 = MSG4_new( log, &msg4, &Ks, &fNa2, &Nb);
+
+    write(fd_B2A, msg4, LenMsg4);
+
+    fprintf( log , "\n" );
+
+    fprintf( log , "Basim Sent the above MSG4 to Amal\n" );
+    fprintf( log , "\n" );
+
     //*************************************
     // Receive   & Process Message 5
     //*************************************

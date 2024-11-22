@@ -938,20 +938,32 @@ size_t  MSG4_new( FILE *log , uint8_t **msg4, const myKey_t *Ks , Nonce_t *fNa2 
 
     // Construct MSG4 Plaintext = { f(Na2)  ||  Nb }
     // Use the global scratch buffer plaintext[] for MSG4 plaintext and fill it in with component values
+    uint8_t *p = &plaintext[0];
 
+    memcpy(p, fNa2, NONCELEN);
+    p += NONCELEN;
+
+    memcpy(p, Nb, NONCELEN);
 
     // Now, encrypt MSG4 plaintext using the session key Ks;
     // Use the global scratch buffer ciphertext[] to collect the result. Make sure it fits.
 
+    LenMsg4 = encrypt( &plaintext[0] , NONCELEN * 2, Ks->key, Ks->iv, &ciphertext[0]);
+
     // Now allocate a buffer for the caller, and copy the encrypted MSG4 to it
     // *msg4 = malloc( .... ) ;
 
+    *msg4 = (uint8_t*) malloc(LenMsg4);
+    if (*msg4 == NULL)
+    {
+      exitError("Memory allocation for new message failed.");
+    }
 
-
+    memcpy(*msg4, ciphertext, LenMsg4);
     
-    // fprintf( log , "The following Encrypted MSG4 ( %lu bytes ) has been"
-    //                " created by MSG4_new ():  \n" , LenMsg4 ) ;
-    // BIO_dump_indent_fp( log , *msg4 , ... ) ;
+    fprintf( log , "The following Encrypted MSG4 ( %lu bytes ) has been"
+                   " created by MSG4_new ():  \n" , LenMsg4 ) ;
+    BIO_dump_indent_fp( log , *msg4 , LenMsg4 , 4 ) ;
 
     return LenMsg4 ;
     
@@ -1071,4 +1083,11 @@ void     fNonce( Nonce_t r , Nonce_t n )
 {
     // Note that the nonces are store in Big-Endian byte order
     // This affects how you do arithmetice on the nonces, e.g. when you add 1
+
+    uint32_t converted = ntohl(*n);
+
+    converted = (converted + 1);
+
+    *r = htonl(converted);
+
 }
