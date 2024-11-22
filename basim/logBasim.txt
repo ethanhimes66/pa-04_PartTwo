@@ -60,4 +60,11 @@ Basim Sent the above MSG4 to Amal
 Basim is expecting back this f( Nb ) in MSG5:
     0000 - 99 88 77 67                                       ..wg
 
-Unable to read all 8 bytes of LenMSG5cipher from FD 7 in MSG5_receive() ... EXITING
+The following Encrypted MSG5 ( 16 bytes ) has been received:
+    0000 - 1b 86 1f c2 59 e9 44 7c-0c eb fc 9e 44 44 8d 53   ....Y.D|....DD.S
+
+Basim received Message 5 from Amal with this f( Nb ): >>>> VALID
+    0000 - 99 88 77 67                                       ..wg
+
+
+Basim has terminated normally. Goodbye

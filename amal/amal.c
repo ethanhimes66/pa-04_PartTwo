@@ -174,7 +174,7 @@ int main ( int argc , char * argv[] )
     BIO_dump_indent_fp( log , &Ks , Kslen , 4 ) ;    fprintf( log , "\n" ) ;
 
     if (memcmp(tempIDb, IDb, strlen(IDb) + 1) == 0) {
-        fprintf( log, "    IDb (%lu Bytes):   ..... MATCH\n", strlen(IDb));
+        fprintf( log, "    IDb (%lu Bytes):   ..... MATCH\n", strlen(IDb) + 1);
         BIO_dump_indent_fp( log , IDb , strlen(IDb) + 1 , 4 ) ;    fprintf( log , "\n" ) ;
     } else {
         exitError("IDb's don't match");
@@ -255,6 +255,22 @@ int main ( int argc , char * argv[] )
     BANNER( log ) ;
     fprintf( log , "         MSG5 New\n");
     BANNER( log ) ;
+
+    Nonce_t fNb;
+    fNonce(fNb, Nb);
+
+    uint8_t  *msg5;
+
+    fprintf( log, "Amal is sending this f( Nb ) in MSG5:\n");
+    BIO_dump_indent_fp( log, &fNb , NONCELEN, 4);
+    fprintf( log , "\n") ;
+
+    size_t LenMsg5 = MSG5_new( log, &msg5, &Ks, &fNb);
+
+    write (fd_A2B, &LenMsg5, sizeof(LenMsg5));
+    write (fd_A2B, msg5, LenMsg5);
+    
+    fprintf( log, "Amal sent Message 5 ( %lu bytes ) to Basim\n", LenMsg5);
 
 
     //*************************************   

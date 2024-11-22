@@ -1031,19 +1031,19 @@ size_t  MSG5_new( FILE *log , uint8_t **msg5, const myKey_t *Ks ,  Nonce_t *fNb 
     // Now, encrypt( Ks , {plaintext} );
     // Use the global scratch buffer ciphertext[] to collect result. Make sure it fits.
 
-    size_t Msg5Len = encrypt( &plaintext[0] , plaintextlen, Ks->key, Ks->iv, &ciphertext[0]);
+    LenMSG5cipher = encrypt( &plaintext[0] , plaintextlen, Ks->key, Ks->iv, &ciphertext[0]);
 
     // Now allocate a buffer for the caller, and copy the encrypted MSG5 to it
     // *msg5 = malloc( ... ) ;
 
-    *msg5 = (uint8_t *)malloc(Msg5Len);
+    *msg5 = (uint8_t *)malloc(LenMSG5cipher);
 
     if (*msg5 == NULL)
     {
       exitError("Memory allocation for new message failed.");
     }
 
-    memcpy(*msg5, ciphertext, Msg5Len);
+    memcpy(*msg5, ciphertext, LenMSG5cipher);
 
 
     fprintf( log , "The following Encrypted MSG5 ( %lu bytes ) has been"
@@ -1090,7 +1090,7 @@ void  MSG5_receive( FILE *log , int fd , const myKey_t *Ks , Nonce_t *fNb )
 
 
     fprintf( log ,"The following Encrypted MSG5 ( %lu bytes ) has been received:\n" , LenMSG5cipher );
-
+    BIO_dump_indent_fp( log , &ciphertext[0], LenMSG5cipher, 4);
 
     // Now, Decrypt MSG5 using Ks
     // Use the global scratch buffer decryptext[] to collect the results of decryption

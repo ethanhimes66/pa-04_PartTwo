@@ -70,7 +70,7 @@ int main ( int argc , char * argv[] )
     fprintf( log , "Starting Basim\n"  ) ;
     BANNER( log ) ;
 
-    fprintf( log , "\n<readFrom Amal> FD=%d , <sendTo Amal> FD=%d\n\n" , fd_A2B , fd_B2A );
+    fprintf( log , "\n<readFr. Amal> FD=%d , <sendTo Amal> FD=%d\n\n" , fd_A2B , fd_B2A );
 
     // Get Basim's master keys with the KDC
     myKey_t   Kb ;    // Basim's master key with the KDC    
@@ -157,6 +157,7 @@ int main ( int argc , char * argv[] )
 
     size_t LenMsg4 = MSG4_new( log, &msg4, &Ks, &fNa2, &Nb);
 
+    write(fd_B2A, &LenMsg4, sizeof(size_t));
     write(fd_B2A, msg4, LenMsg4);
 
     fprintf( log , "\n" );
@@ -171,6 +172,24 @@ int main ( int argc , char * argv[] )
     BANNER( log ) ;
     fprintf( log , "         MSG5 Receive\n");
     BANNER( log ) ;
+
+    Nonce_t exp_fNb, rcvd_fNb;
+    fNonce(exp_fNb, Nb);
+
+    fprintf( log, "Basim is expecting back this f( Nb ) in MSG5:\n");
+    BIO_dump_indent_fp( log , exp_fNb, NONCELEN, 4);
+    fprintf( log , "\n" );
+
+    MSG5_receive( log, fd_A2B, &Ks, &rcvd_fNb);
+    fprintf( log , "\n" );
+
+    if (memcmp(exp_fNb, rcvd_fNb, NONCELEN) == 0) {
+        fprintf( log, "Basim received Message 5 from Amal with this f( Nb ): >>>> VALID\n" );
+        BIO_dump_indent_fp( log , rcvd_fNb, NONCELEN, 4);
+    } else {
+        exitError("Nonce's don't match");
+    }
+    fprintf( log , "\n" );
 
     //*************************************   
     // Final Clean-Up

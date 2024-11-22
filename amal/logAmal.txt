@@ -52,7 +52,7 @@ Amal decrypted message 2 from the KDC into the following:
     0010 - 7d ef 6b 03 55 05 b2 0e-9d 35 90 88 67 e7 85 dd   }.k.U....5..g...
     0020 - 8d ba 5c 47 10 37 c7 50-2f c3 38 eb 57 1c 64 31   ..\G.7.P/.8.W.d1
 
-    IDb (15 Bytes):   ..... MATCH
+    IDb (16 Bytes):   ..... MATCH
     0000 - 42 61 73 69 6d 20 69 73-20 53 6d 69 6c 65 79 00   Basim is Smiley.
 
     Received Copy of Na (4 bytes):    >>>> VALID
@@ -101,5 +101,12 @@ Amal also received this Nb :
 ***************************************************
          MSG5 New
 ***************************************************
+Amal is sending this f( Nb ) in MSG5:
+    0000 - 99 88 77 67                                       ..wg
+
+The following Encrypted MSG5 ( 16 bytes ) has been created by MSG5_new ():  
+    0000 - 1b 86 1f c2 59 e9 44 7c-0c eb fc 9e 44 44 8d 53   ....Y.D|....DD.S
+
+Amal sent Message 5 ( 16 bytes ) to Basim
 
 Amal has terminated normally. Goodbye
