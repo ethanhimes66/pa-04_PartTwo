@@ -917,14 +917,28 @@ size_t  MSG5_new( FILE *log , uint8_t **msg5, const myKey_t *Ks ,  Nonce_t *fNb 
 
     // Construct MSG5 Plaintext  = {  f(Nb)  }
     // Use the global scratch buffer plaintext[] for MSG5 plaintext. Make sure it fits 
+    uint8_t *p = &plaintext[0];
+    size_t plaintextlen = 0;
 
+    memcpy(p, fNb, NONCELEN);
+    plaintextlen += NONCELEN;
 
     // Now, encrypt( Ks , {plaintext} );
     // Use the global scratch buffer ciphertext[] to collect result. Make sure it fits.
 
+    size_t Msg5Len = encrypt( &plaintext[0] , plaintextlen, Ks->key, Ks->iv, &ciphertext[0]);
 
     // Now allocate a buffer for the caller, and copy the encrypted MSG5 to it
     // *msg5 = malloc( ... ) ;
+
+    *msg5 = (uint8_t *)malloc(Msg5Len);
+
+    if (*msg5 == NULL)
+    {
+      exitError("Memory allocation for new message failed.");
+    }
+
+    memcpy(*msg5, ciphertext, Msg5Len);
 
 
     fprintf( log , "The following Encrypted MSG5 ( %lu bytes ) has been"
@@ -950,6 +964,25 @@ void  MSG5_receive( FILE *log , int fd , const myKey_t *Ks , Nonce_t *fNb )
     // Use the global scratch buffer ciphertext[] to receive encrypted MSG5.
     // Make sure it fits.
 
+    if (read(fd, &LenMSG5cipher, sizeof(size_t)) == -1)
+    {
+        fprintf( log , "Unable to receive all %lu bytes of Len(Msg5) "
+                       "in MSG5_receive() ... EXITING\n" , LENSIZE );
+        
+        fflush( log ) ;  fclose( log ) ;
+        exitError( "Unable to receive all bytes Len(Msg5) in MSG5_receive()" );
+    }
+
+    //Read the whole message
+    if (read(fd, &ciphertext[0], LenMSG5cipher) == -1)
+    {
+        fprintf( log , "Unable to receive all %lu bytes of Msg5 "
+                       "in MSG5_receive() ... EXITING\n" , LenMSG5cipher );
+        
+        fflush( log ) ;  fclose( log ) ;
+        exitError( "Unable to receive all bytes Msg5 in MSG5_receive()" );
+    }
+
 
     fprintf( log ,"The following Encrypted MSG5 ( %lu bytes ) has been received:\n" , LenMSG5cipher );
 
@@ -958,11 +991,11 @@ void  MSG5_receive( FILE *log , int fd , const myKey_t *Ks , Nonce_t *fNb )
     // Use the global scratch buffer decryptext[] to collect the results of decryption
     // Make sure it fits
 
+    size_t pMsgLen = decrypt(&ciphertext[0], LenMSG5cipher, Ks->key, Ks->iv, &plaintext[0]);
 
     // Parse MSG5 into its components f( Nb )
-
-
-
+    char *p = &plaintext[0];
+    memcpy(fNb, p, NONCELEN);
 }
 
 //-----------------------------------------------------------------------------
@@ -973,5 +1006,5 @@ void  MSG5_receive( FILE *log , int fd , const myKey_t *Ks , Nonce_t *fNb )
 void     fNonce( Nonce_t r , Nonce_t n )
 {
     // Note that the nonces are store in Big-Endian byte order
-    // This affects how you do arithmetice on the noces, e.g. when you add 1
+    // This affects how you do arithmetice on the nonces, e.g. when you add 1
 }
